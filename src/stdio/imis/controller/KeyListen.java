@@ -35,7 +35,7 @@ public class KeyListen implements KeyListenner {
         }
         //发射子弹监听
         if(e.getKeyCode()==KeyEvent.VK_ENTER){
-            //if(mp.myTank.bullet.size()<5)
+            if(mp.myTank.bullets.size()<5)
                 mp.myTank.shoot();
         }
         mp.repaint();
