@@ -8,7 +8,7 @@ public class Tank implements Runnable{
     private int speed = 5;
     private int type = 0;
     private Page map;
-    private int direction = 0;//0-上,1-右,2-下,3-左;
+    private int direction = 0;//0-上,1-下,2-左,3-右;
     public Vector<Bullet> bullets = new Vector<Bullet>();
     private Bullet myBullet;
     public boolean alive = true;
@@ -77,8 +77,8 @@ public class Tank implements Runnable{
     }
 
     public void moveDown() {
-        if (y + speed > 470) {
-            y = 470;
+        if (y + speed > 420) {
+            y = 420;
         } else {
             y += speed;
         }
@@ -93,8 +93,8 @@ public class Tank implements Runnable{
     }
 
     public void moveRight() {
-        if (x + speed > 470) {
-            x = 470;
+        if (x + speed > 450) {
+            x = 450;
         } else {
             x += speed;
         }

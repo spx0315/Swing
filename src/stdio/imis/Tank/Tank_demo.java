@@ -23,5 +23,6 @@ public class Tank_demo extends JFrame {
         this.setLocation(400, 470);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+        this.addKeyListener(mp);
     }
 }
