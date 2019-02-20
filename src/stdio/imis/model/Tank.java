@@ -7,20 +7,26 @@ public class Tank implements Runnable{
     private int y = 0;
     private int speed = 5;
     private int type = 0;
-    private Page map;
+    private Page field;
     private int direction = 0;//0-上,1-下,2-左,3-右;
     public Vector<Bullet> bullets = new Vector<Bullet>();
-    private Bullet myBullet;
+    public Bullet myBullet;
     public boolean alive = true;
     public boolean start = true;
 
-    public void setMap(Page map) {
-        this.map = map;
+    public void setField(Page field) {
+        this.field = field;
     }
 
-    public Tank(int x, int y){
+    public Tank(){
+
+    }
+
+    public Tank(int x, int y,int direction,int type){
         this.x=x;
         this.y=y;
+        this.direction=direction;
+        this.type=type;
     }
 
     public int getx() {
@@ -54,15 +60,15 @@ public class Tank implements Runnable{
                 bullets.add(myBullet);
                 break;
             case 1:
-                myBullet = new Bullet(x + 30, y + 10, 5, 1);
+                myBullet = new Bullet(x + 10, y + 10, 5, 1);
                 bullets.add(myBullet);
                 break;
             case 2:
-                myBullet = new Bullet(x + 10, y + 30, 5, 2);
+                myBullet = new Bullet(x + 10, y + 10, 5, 2);
                 bullets.add(myBullet);
                 break;
             case 3:
-                myBullet = new Bullet(x, y + 10, 5, 3);
+                myBullet = new Bullet(x + 10, y + 10, 5, 3);
                 bullets.add(myBullet);
                 break;
         }
@@ -115,9 +121,9 @@ public class Tank implements Runnable{
                                 if (y <= 0)
                                     break;// 撞墙跳出循环
                                 if (y >= 30)// 仿数组越界
-                                    if (map.location[x][y - 30] == 1 || map.location[x][y - 20] == 1) {
-                                        map.location[x][y - 30] = 0;//这里没分开判断
-                                        map.location[x][y - 20] = 0;
+                                    if (field.location[x][y - 30] == 1 || field.location[x][y - 20] == 1) {
+                                        field.location[x][y - 30] = 0;//这里没分开判断
+                                        field.location[x][y - 20] = 0;
                                         break;
                                     }
                                 Thread.sleep(80);
@@ -127,12 +133,12 @@ public class Tank implements Runnable{
                             step = (int) (Math.random() * 30);
                             for (int i = 0; i < step; i++) {
                                 moveRight();
-                                if (x >= 500)
+                                if (x >= 480)
                                     break;
-                                if (x < 470)
-                                    if (map.location[x + 20][y] == 1 || map.location[x + 30][y] == 1) {
-                                        map.location[x + 20][y] = 0;
-                                        map.location[x + 30][y] = 0;
+                                if (x < 450)
+                                    if (field.location[x + 20][y] == 1 || field.location[x + 30][y] == 1) {
+                                        field.location[x + 20][y] = 0;
+                                        field.location[x + 30][y] = 0;
                                         break;
                                     }
                                 Thread.sleep(80);
@@ -142,12 +148,12 @@ public class Tank implements Runnable{
                             step = (int) (Math.random() * 30);
                             for (int i = 0; i < step; i++) {
                                 moveDown();
-                                if (y >= 500)
+                                if (y >= 450)
                                     break;
-                                if (y < 470)
-                                    if (map.location[x][y + 30] == 1 || map.location[x][y + 20] == 1) {
-                                        map.location[x][y + 30] = 0;
-                                        map.location[x][y + 20] = 0;
+                                if (y < 420)
+                                    if (field.location[x][y + 30] == 1 || field.location[x][y + 20] == 1) {
+                                        field.location[x][y + 30] = 0;
+                                        field.location[x][y + 20] = 0;
                                         break;
                                     }
                                 Thread.sleep(80);
@@ -160,9 +166,9 @@ public class Tank implements Runnable{
                                 if (x <= 0)
                                     break;
                                 if (x >= 30)
-                                    if (map.location[x - 20][y] == 1 || map.location[x - 30][y] == 1) {
-                                        map.location[x - 20][y] = 0;
-                                        map.location[x - 30][y] = 0;
+                                    if (field.location[x - 20][y] == 1 || field.location[x - 30][y] == 1) {
+                                        field.location[x - 20][y] = 0;
+                                        field.location[x - 30][y] = 0;
                                         break;
                                     }
                                 Thread.sleep(80);

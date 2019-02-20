@@ -4,13 +4,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Vector;
 
-public class MyPanel extends JPanel implements KeyListener {
+public class MyPanel extends JPanel implements KeyListener,Runnable {
 
-    public Tank myTank;
+    public Tank myTank;//我方坦克
+    public Tank enemy;
+    Vector<Tank> enemies = new Vector<Tank>();//敌方坦克集合
+    Vector<Dead> booms = new Vector<Dead>();//击毁集合
+    Page field = new Page();
+
+
 
     public MyPanel() {
-        myTank = new Tank(300, 150);
+        myTank = new Tank(300, 200,0,0);
+        myTank.setField(field);
+        //敌方7流氓创建
+        for(int i = 0; i < 7;i++){
+            enemy = new Tank(i*30,10,2,1);
+            enemies.add(enemy);
+            enemy.setField(field);
+            new Thread(enemy).start();
+        }
+
     }
 
     @Override
@@ -19,13 +35,50 @@ public class MyPanel extends JPanel implements KeyListener {
         //调用父类完成初始化
         super.paint(g);
 
-        g.setColor(Color.blue);
+        //g.setColor(Color.blue);
         //然后就可以在这里面画画啦
+        if(myTank.alive == true) {
+            drawTank(myTank.getx(), myTank.gety(), myTank.getDirection(), g, 0);//画我的坦克
+        }
+        for (int i = 0; i < myTank.bullets.size(); i++) {// 循环时删除集合时，不要用foreach，用for
+            Bullet b = new Bullet();
+            b = myTank.bullets.get(i);
+            if (b.alive == true) {
+                g.setColor(Color.white);
+                g.fill3DRect(b.getX(), b.getY(), 2, 2, false);
+            } else
+                myTank.bullets.remove(b);
+        }
 
-        drawTank(myTank.getx(), myTank.gety(), myTank.getDirection(), g);
+        //敌方坦克
+        for(int i = 0; i < enemies.size();i++){
+            Tank enemy = enemies.get(i);
+            if(enemy.alive == true){
+                drawEnemy(enemy.getx(),enemy.gety(),enemy.getDirection(),g,1);
+            }
+            if(enemy.alive == true){
+                g.setColor(Color.GREEN);
+                g.fill3DRect(enemy.getx(),enemy.gety(),2,2,false);
+            }
+            else{
+                enemy.bullets.remove(enemy);
+            }
+        }
     }
 
-    public void drawTank(int x, int y, int direction, Graphics g) {
+
+
+    public void drawEnemy(int x,int y,int direction,Graphics g,int type){
+        drawTank(x,y,direction,g,1);
+    }
+
+    public void drawTank(int x, int y, int direction, Graphics g,int type) {
+        if(type == 0){
+            g.setColor(Color.CYAN);
+        }
+        else {
+            g.setColor(Color.GREEN);
+        }
         switch (direction) {
             case 0:
                 g.fill3DRect(x, y, 5, 30, false);
@@ -115,6 +168,7 @@ public class MyPanel extends JPanel implements KeyListener {
         //发射子弹监听
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (myTank.bullets.size() < 5)
+                //myTank.myBullet.setDirection(myTank.getDirection());
                 myTank.shoot();
         }
         repaint();
@@ -122,6 +176,11 @@ public class MyPanel extends JPanel implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }

@@ -1,12 +1,16 @@
 package stdio.imis.model;
 
+import stdio.imis.dao.KeyListenner;
+
+import java.awt.event.KeyEvent;
+
 public class Bullet {
     private int x;
     private int y;
     private int speed;
     private int direction;
     public boolean alive=true;
-    public Bullet(int x, int y, int speed, int drect) {
+    public Bullet(int x, int y, int speed, int direction) {
         super();
         this.x = x;
         this.y = y;
@@ -34,7 +38,15 @@ public class Bullet {
         this.y = y;
     }
 
-    class BulletThread implements Runnable {
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    class BulletThread implements Runnable, KeyListenner {
         @Override
         public void run() {
             while (true) {
@@ -48,20 +60,35 @@ public class Bullet {
                         y -= speed;
                         break;
                     case 1:
-                        x += speed;
-                        break;
-                    case 2:
                         y += speed;
                         break;
-                    case 3:
+                    case 2:
                         x -= speed;
                         break;
+                    case 3:
+                        x += speed;
+                        break;
                 }
-                if (x < 0 || y < 0 || x > 500 || y > 500||!alive) {
+                if (x < 0 || y < 0 || x > 500 || y > 500||alive == false) {
                     alive=false;
                     break;
                 }
             }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+
         }
     }
 }
