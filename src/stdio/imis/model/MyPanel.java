@@ -1,5 +1,7 @@
 package stdio.imis.model;
 
+import com.sun.javafx.iio.gif.GIFDescriptor;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -13,6 +15,7 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
     Vector<Tank> enemies = new Vector<Tank>();//敌方坦克集合
     Vector<Dead> booms = new Vector<Dead>();//击毁集合
     Page field = new Page();
+    Image gif;
 
 
 
@@ -26,7 +29,7 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
             enemy.setField(field);
             new Thread(enemy).start();
         }
-
+        gif = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/1.png"));
     }
 
     @Override
@@ -40,6 +43,7 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
         if(myTank.alive == true) {
             drawTank(myTank.getx(), myTank.gety(), myTank.getDirection(), g, 0);//画我的坦克
         }
+        //我方子弹
         for (int i = 0; i < myTank.bullets.size(); i++) {// 循环时删除集合时，不要用foreach，用for
             Bullet b = new Bullet();
             b = myTank.bullets.get(i);
@@ -56,15 +60,66 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
             if(enemy.alive == true){
                 drawEnemy(enemy.getx(),enemy.gety(),enemy.getDirection(),g,1);
             }
-            if(enemy.alive == true){
-                g.setColor(Color.GREEN);
-                g.fill3DRect(enemy.getx(),enemy.gety(),2,2,false);
-            }
-            else{
-                enemy.bullets.remove(enemy);
+            //敌方子弹
+            for(int j = 0; j<enemy.bullets.size();j++) {
+                Bullet eb =enemy.bullets.get(j);
+                if (eb.alive == true) {
+                    g.setColor(Color.GREEN);
+                    g.fill3DRect(eb.getX(), eb.getY(), 2, 2, false);
+                } else {
+                    enemy.bullets.remove(eb);
+                }
             }
         }
+        //死亡动画
+        for(int i =0; i < booms.size();i++) {
+            Dead boom = booms.get(i);
+            if (boom.alive == true) {
+                if (boom.getLife() > 4) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    g.drawImage(gif, boom.getX(), boom.getY(), 30, 30, this);
+                } else if (boom.getLife() > 2) {
+                    g.drawImage(gif, boom.getX(), boom.getY(), 15, 15, this);
+                } else if (boom.getLife() > 0) {
+                    g.drawImage(gif, boom.getX(), boom.getY(), 1, 1, this);
+                }
+            }
+            boom.reduceLife();
+            if(boom.getLife() == 0){
+                booms.remove(boom);
+            }
+        }
+
     }
+    public boolean HitJudge(Bullet b,Tank enemy){
+        if (enemy.getDirection() == 0 || enemy.getDirection() == 2) {
+            // 坦克竖着时宽20，高30
+            if (b.getX() >= enemy.getx() && b.getX() <= enemy.getx() + 20 && b.getY() >= enemy.gety()
+                    && b.getY() <= enemy.gety() + 30) {
+                b.alive = false;
+                enemy.alive = false;
+                Dead boom = new Dead(enemy.getx(), enemy.gety());
+                booms.add(boom);
+                return true;
+            }
+            return false;
+        } else {// 横着宽30，高20；
+            if (b.getX() >= enemy.getx() && b.getX() <= enemy.getx() + 30 && b.getY() >= enemy.gety()
+                    && b.getY() <= enemy.gety() + 20) {
+                enemy.alive = false;
+                b.alive = false;
+                Dead boom = new Dead(enemy.getx(), enemy.gety());
+                booms.add(boom);
+                return true;
+            }
+            return false;
+        }
+    }
+
 
 
 
@@ -144,6 +199,7 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
         }
     }
 
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -174,6 +230,7 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
         repaint();
     }
 
+
     @Override
     public void keyReleased(KeyEvent e) {
 
@@ -181,6 +238,40 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
 
     @Override
     public void run() {
+        while (true) {
+            try {
+                Thread.sleep(50);// 画板刷新频率
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // 判断自己坦克的子弹是否击中敌人坦克
+            for (int i = 0; i < myTank.bullets.size(); i++) {
+                Bullet b = myTank.bullets.get(i);
+                if (b.alive) {
+                    for (int j = 0; j < enemies.size(); j++) {
+                        Tank enemy = enemies.get(j);
+                        if (enemy.alive) {
+                            HitJudge(b, enemy);
+                        }
+                    }
+                }
+            }
+            // 判断敌方坦克 的子弹是否击中我方坦克
+            for (int i = 0; i < enemies.size(); i++) {
+                Tank enemy = enemies.get(i);
+                for (int j = 0; j < enemy.bullets.size(); j++) {// 这里写错ek查到死。。。
+                    Bullet eb = enemy.bullets.get(j);
+                    if (eb.alive) {
+                        HitJudge(eb, myTank);
+                    }
+                }
+            }
+            this.repaint();// 刷新
+            if (myTank.alive == false) {
+                JOptionPane.showMessageDialog(this, "你被击中了，原地复活吧");
+                myTank.alive = true;
+            }
+        }
 
     }
 }

@@ -2,5 +2,7 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/resource/1.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/resource/1.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/stdio/imis/1.png" charset="GBK" />
   </component>
 </project>

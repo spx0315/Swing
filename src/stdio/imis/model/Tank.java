@@ -79,6 +79,7 @@ public class Tank implements Runnable{
             y = 0;
         } else {
             y -= speed;
+            field.location[x][y]=1;
         }
     }
 
@@ -87,6 +88,7 @@ public class Tank implements Runnable{
             y = 420;
         } else {
             y += speed;
+            field.location[x][y]=1;
         }
     }
 
@@ -95,6 +97,7 @@ public class Tank implements Runnable{
             x = 0;
         } else {
             x -= speed;
+            field.location[x][y]=1;
         }
     }
 
@@ -103,6 +106,7 @@ public class Tank implements Runnable{
             x = 450;
         } else {
             x += speed;
+            field.location[x][y]=1;
         }
     }
 
@@ -111,7 +115,7 @@ public class Tank implements Runnable{
         while (alive) {
             if (start) {
                 int step;
-                int s;
+                int biu;
                 try {
                     switch (direction) {
                         case 0:
@@ -179,8 +183,8 @@ public class Tank implements Runnable{
                     e.printStackTrace();
                 }
                 direction = (int) (Math.random() * 4);// 随机方向
-                s = (int) (Math.random() * 10);
-                if (s > 8) {
+                biu = (int) (Math.random() * 10);
+                if (biu > 8) {
                     shoot();
                 }
             }
