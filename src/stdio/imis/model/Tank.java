@@ -124,9 +124,9 @@ public class Tank implements Runnable{
                                 moveUp();
                                 if (y <= 0)
                                     break;// 撞墙跳出循环
-                                if (y >= 30)// 仿数组越界
+                                if (y >= 30)
                                     if (field.location[x][y - 30] == 1 || field.location[x][y - 20] == 1) {
-                                        field.location[x][y - 30] = 0;//这里没分开判断
+                                        field.location[x][y - 30] = 0;
                                         field.location[x][y - 20] = 0;
                                         break;
                                     }

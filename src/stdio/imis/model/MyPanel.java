@@ -95,9 +95,9 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
         }
 
     }
-    public boolean HitJudge(Bullet b,Tank enemy){
-        if (enemy.getDirection() == 0 || enemy.getDirection() == 2) {
-            // 坦克竖着时宽20，高30
+    /*public boolean HitJudge(Bullet b,Tank enemy){
+        //上下方向
+        if (enemy.getDirection() == 0 || enemy.getDirection() == 1) {
             if (b.getX() >= enemy.getx() && b.getX() <= enemy.getx() + 20 && b.getY() >= enemy.gety()
                     && b.getY() <= enemy.gety() + 30) {
                 b.alive = false;
@@ -107,7 +107,9 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
                 return true;
             }
             return false;
-        } else {// 横着宽30，高20；
+        }
+        else {
+            //左右方向
             if (b.getX() >= enemy.getx() && b.getX() <= enemy.getx() + 30 && b.getY() >= enemy.gety()
                     && b.getY() <= enemy.gety() + 20) {
                 enemy.alive = false;
@@ -118,9 +120,15 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
             }
             return false;
         }
+    }*/
+
+    public void HitJudge(Bullet b,Tank tank){
+        switch (tank.getDirection()){
+            case 0:
+            case 1:
+                if(b.getX() > tank.getx() && b.getX() + 20 < tank.getx())
+        }
     }
-
-
 
 
     public void drawEnemy(int x,int y,int direction,Graphics g,int type){
