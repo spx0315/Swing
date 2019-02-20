@@ -126,7 +126,22 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
         switch (tank.getDirection()){
             case 0:
             case 1:
-                if(b.getX() > tank.getx() && b.getX() + 20 < tank.getx())
+                //上下方向
+                if(b.getX() > tank.getx() && b.getX()< tank.getx() + 20 && b.getY() > tank.gety() && b.getY() < tank.gety() + 30){
+                    b.alive = false;
+                    tank.alive = false;
+                    Dead boom = new Dead(tank.getx(),tank.gety());
+                    booms.add(boom);
+                }
+                break;
+            case 2:
+            case 3:
+                if(b.getX() > tank.getx() && b.getX() < tank.getx() + 30 && b.getY() > tank.gety() && b.getY() < tank.gety() + 20){
+                    b.alive = false;
+                    tank.alive = false;
+                    Dead boom = new Dead(tank.getx(),tank.gety());
+                    booms.add(boom);
+                }
         }
     }
 
@@ -235,7 +250,8 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
                 //myTank.myBullet.setDirection(myTank.getDirection());
                 myTank.shoot();
         }
-        repaint();
+        //最后最最重要的：你要重绘它
+        repaint ();
     }
 
 
@@ -258,7 +274,7 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
                 if (b.alive) {
                     for (int j = 0; j < enemies.size(); j++) {
                         Tank enemy = enemies.get(j);
-                        if (enemy.alive) {
+                        if (enemy.alive == true) {
                             HitJudge(b, enemy);
                         }
                     }
@@ -269,7 +285,7 @@ public class MyPanel extends JPanel implements KeyListener,Runnable {
                 Tank enemy = enemies.get(i);
                 for (int j = 0; j < enemy.bullets.size(); j++) {// 这里写错ek查到死。。。
                     Bullet eb = enemy.bullets.get(j);
-                    if (eb.alive) {
+                    if (eb.alive == true) {
                         HitJudge(eb, myTank);
                     }
                 }

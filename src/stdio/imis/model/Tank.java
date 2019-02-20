@@ -53,6 +53,10 @@ public class Tank implements Runnable{
         return direction;
     }
 
+    public int getSpeed() {
+        return speed;
+    }
+
     public void shoot(){
         switch (direction) {
             case 0:
@@ -112,7 +116,7 @@ public class Tank implements Runnable{
 
     @Override
     public void run() {
-        while (alive) {
+        while (alive == true) {
             if (start) {
                 int step;
                 int biu;
